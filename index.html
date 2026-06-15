@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Animations, Transitions & Transforms | Clip-Path Gallery</title>
+    <style>
+        /* ========== RESET & BASE STYLES ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(145deg, #2c3e2f 0%, #1a2a1c 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, 'Inter', sans-serif;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* decorative background elements */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: radial-gradient(circle at 30% 40%, rgba(255,215,130,0.08) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* main container with elegant card effect */
+        .container {
+            position: relative;
+            width: 1100px;
+            max-width: 90vw;
+            height: 600px;
+            background: #0f0f12;
+            border-radius: 32px;
+            box-shadow: 0 30px 45px -20px rgba(0,0,0,0.6), 0 8px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.4s ease;
+            cursor: pointer;
+            backdrop-filter: blur(1px);
+        }
+
+        .container:hover {
+            box-shadow: 0 40px 60px -20px rgba(0,0,0,0.8);
+        }
+
+        /* shared clip styles - each image panel */
+        .clip {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: all 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            background-size: cover;
+            background-position: center 30%;
+            background-repeat: no-repeat;
+            will-change: clip-path;
+            box-shadow: 0 0 0 rgba(0,0,0,0.2);
+        }
+
+        /* adding smooth transform enhancement for modern feel */
+        .clip:hover {
+            filter: brightness(1.02) saturate(1.05);
+            transition: filter 0.3s ease;
+        }
+
+        /* individual image assignments & custom clip-paths (as per design using local images) */
+        .clip1 {
+            background: url('1.jpg') no-repeat center/cover;
+            background-position: 25% 35%;
+            clip-path: polygon(0 0, 17% 0, 49% 100%, 0% 100%);
+        }
+        
+        .clip2 {
+            background: url('2.jpg') no-repeat center/cover;
+            background-position: 45% 40%;
+            clip-path: polygon(13% 0, 81% 0, 59% 100%, 36% 100%);
+        }
+        
+        .clip3 {
+            background: url('56.jpg') no-repeat center/cover;
+            background-position: 70% 30%;
+            clip-path: polygon(79% 0, 100% 0, 100% 100%, 59% 100%);
+        }
+
+        /* HOVER EFFECT 1: when hovering entire container, all clips shrink to the right edge (disappear effect) */
+        .container:hover .clip {
+            clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+            transition: clip-path 0.55s cubic-bezier(0.55, 0.06, 0.68, 0.19);
+        }
+
+        /* HOVER EFFECT 2: individual clip expands to full area on hover (overrides container effect with higher specificity) */
+        .container .clip:hover {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            z-index: 10;
+            transition: clip-path 0.45s cubic-bezier(0.2, 0.9, 0.4, 1.1), filter 0.2s;
+            filter: brightness(1.05) contrast(1.02);
+        }
+
+        /* ensure that when hovering a specific clip, the container’s effect doesn't ruin it */
+        .container:hover .clip:hover {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        /* optional subtle overlay + text label to explain interaction */
+        .info-badge {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 25;
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(8px);
+            padding: 10px 20px;
+            border-radius: 60px;
+            color: #f5ede1;
+            font-weight: 500;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            border-left: 3px solid #ffb347;
+            pointer-events: none;
+            font-family: monospace;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.2);
+            transition: opacity 0.3s;
+        }
+
+        .info-badge span {
+            color: #ffcf8a;
+            font-weight: bold;
+        }
+
+        /* hover indicator glint effect (for extra micro-interaction) */
+        @keyframes softPulse {
+            0% { text-shadow: 0 0 0px rgba(255,180,70,0); }
+            100% { text-shadow: 0 0 2px rgba(255,200,100,0.6); }
+        }
+
+        /* responsive adjustments for smaller screens */
+        @media (max-width: 760px) {
+            .container {
+                height: 450px;
+                border-radius: 24px;
+            }
+            .info-badge {
+                font-size: 0.7rem;
+                bottom: 12px;
+                left: 12px;
+                padding: 6px 14px;
+            }
+            .clip {
+                background-position: center 30%;
+            }
+        }
+
+        /* tooltip style for modern flair */
+        .instruction {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            background: rgba(20,20,30,0.75);
+            backdrop-filter: blur(10px);
+            padding: 8px 16px;
+            border-radius: 100px;
+            color: #ddd9ce;
+            font-size: 0.75rem;
+            font-weight: 400;
+            font-family: monospace;
+            letter-spacing: 0.3px;
+            pointer-events: none;
+            z-index: 25;
+            border: 1px solid rgba(255,215,130,0.3);
+            transition: all 0.2s;
+        }
+        
+        .container:hover .instruction {
+            background: rgba(0,0,0,0.7);
+            color: #ffdd99;
+        }
+
+        /* decorative divider */
+        .clip::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.2) 100%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .clip:hover::after {
+            opacity: 0.3;
+        }
+
+        /* fallback note in case images are missing - subtle */
+        .clip1:invalid, .clip2:invalid, .clip3:invalid {
+            background-color: #2a2a2e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- three clipping panels using local images: 1.jpg, 2.jpg, 56.jpg -->
+        <div class="clip clip1" title="Image 1.jpg — hover to expand fully"></div>
+        <div class="clip clip2" title="Image 2.jpg — hover to reveal full view"></div>
+        <div class="clip clip3" title="Image 56.jpg — explore details on hover"></div>
+        
+        <!-- subtle UI overlay to guide user interaction -->
+        <div class="info-badge">
+            ✦ <span>clip-path gallery</span> ✦ <br>
+            hover container → collapse all &nbsp;&nbsp;|&nbsp;&nbsp; hover panel → full reveal
+        </div>
+        <div class="instruction">
+            ⚡ interactive morphing | CSS transitions + transforms
+        </div>
+    </div>
+</body>
+</html>
